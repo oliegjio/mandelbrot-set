@@ -15,6 +15,8 @@ void display()
     const float step = 0.005;
     const float jumps = 20.0f;
 
+    const float range = std::sqrt(powf(2.0f, 2.0f) + powf(2.0f, 2.0f));
+
     glBegin(GL_POINTS);
     for (float i = -2.0f; i <= 2.0f; i += step)
     {
@@ -25,7 +27,7 @@ void display()
             for (float k = 1; k <= jumps; k++)
             {
                 z = (z * z) + c;
-                if (std::abs(z) > 8.0f)
+                if (std::abs(z) > range)
                 {
                     glColor3f(k / jumps, 0.0f, 0.0f);
                     glVertex2f(c.real(), c.imag());
