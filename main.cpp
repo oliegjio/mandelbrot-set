@@ -1,3 +1,6 @@
+#ifdef _WIN32
+	#include <windows.h>
+#endif
 #include <GL/glut.h>
 #include <complex>
 #include <iostream>
@@ -12,7 +15,7 @@ void display()
     std::complex<float> z;
     std::complex<float> c;
 
-    const float step = 0.005;
+    const float step = 0.005f;
     const float jumps = 20.0f;
 
     const float range = std::sqrt(powf(2.0f, 2.0f) + powf(2.0f, 2.0f));
