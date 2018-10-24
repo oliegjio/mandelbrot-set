@@ -8,7 +8,7 @@
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 800
 
-// Mandelbrot set domain is withing the circle bounded by square with side length of 2:
+// Mandelbrot set domain is within the circle bounded by square with side length of 2:
 const float mandelbrot_range = 2.0f;
 
 // Find the radius of this circle:
@@ -29,7 +29,9 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    const float step = (mandelbrot_range / 1500.0f) * view_range; // Divide observable area on squares with side lengths of.
+    // Divide observable area into grid.
+    // We then can use grid points as input points for Mandelbrot set formula.
+    const float step = (mandelbrot_range / 1500.0f) * view_range; // Grid width/height.
     const float jumps = 40.0f / view_range; // Number of times to check each point.
 
     // Mandelbrot set formula: z_(n + 1) = z_n^2 + c.
@@ -52,14 +54,14 @@ void display()
                 z = (z * z) + c; // Make next `jump`.
                 if (std::abs(z) > mandelbrot_radius) // This point is not in Mandelbrot set (it left the domain).
                 {
-                    // Color this point by how many `jumps` it takes to leave Mandelbrot set domain.
+                    // Color this point by how many `jumps` it takes to leave Mandelbrot set domain:
                     glColor3f(k / jumps, 0.0f, 0.0f);
                     glVertex2f(c.real(), c.imag());
                     break;
                 }
                 if (k == jumps) // This point is in Mandelbrot set.
                 {
-                    // Color this point black.
+                    // Color this point black:
                     glColor3f(0.0f, 0.0f, 0.0f);
                     glVertex2f(c.real(), c.imag());
                     break;
@@ -76,7 +78,7 @@ void update_projection()
 {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // Adjust projection according to observable area.
+    // Adjust projection according to observable area:
     glOrtho(-view_range + view_x, view_range + view_x, -view_range + view_y, view_range + view_y, -1.0f, 1.0f);
     glMatrixMode(GL_MODELVIEW);
 }
