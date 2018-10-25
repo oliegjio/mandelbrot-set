@@ -7,3 +7,5 @@
 ### Control:
 - Arrow keys: move left / right, top / bottom.
 - F1 - zoom in, F2 - zoom out.
+- F3 - print current zoom and position to the console.
+- F4 - reset zoom and position.

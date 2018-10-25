@@ -16,10 +16,18 @@ const float mandelbrot_radius = std::sqrt(powf(mandelbrot_range, 2.0f) + powf(ma
 
 // Observable area of the Mandelbrot set. By default, it is the whole set. We can zoom in/out:
 float view_range = mandelbrot_range;
+//float view_range = 0.0333709f;
 
 // Location of the observable area. We can move left/right, top/bottom:
 float view_x = 0.42884f;
 float view_y = -0.231345f;
+
+/*
+ * List of nice observable areas:
+ * |   RANGE   |     X     |     Y     |
+ * | 0.0222473 | 0.42884   | -0.231345 |
+ * | 0.0333709 | 0.42884   | -0.231345 |
+ */
 
 // Step sizes for zooming and moving the observable area:
 const float move_step = 10.0f;
@@ -55,14 +63,14 @@ void display()
                 if (std::abs(z) > mandelbrot_radius) // This point is not in Mandelbrot set (it left the domain).
                 {
                     // Color this point by how many `jumps` it takes to leave Mandelbrot set domain:
-                    glColor3f(k / jumps, 0.0f, 0.0f);
+                    glColor3f(k / jumps / view_range, 0.0f, 0.0f);
                     glVertex2f(c.real(), c.imag());
                     break;
                 }
                 if (k == jumps) // This point is in Mandelbrot set.
                 {
-                    // Color this point black:
-                    glColor3f(0.0f, 0.0f, 0.0f);
+                    // Color this point completely red:
+                    glColor3f(1.0f, 0.0f, 0.0f);
                     glVertex2f(c.real(), c.imag());
                     break;
                 }
@@ -74,12 +82,16 @@ void display()
     glutSwapBuffers();
 }
 
-void update_projection()
-{
+void update_projection() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
     // Adjust projection according to observable area:
-    glOrtho(-view_range + view_x, view_range + view_x, -view_range + view_y, view_range + view_y, -1.0f, 1.0f);
+    glOrtho(-view_range + view_x,
+            view_range + view_x,
+            -view_range + view_y,
+            view_range + view_y, -1.0f, 1.0f);
+
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -112,11 +124,23 @@ void keyboard(int key, int x, int y)
             break;
 
         case GLUT_KEY_F1:
-            view_range -= view_range / zoom_step;
+            view_range -= std::abs(view_range / zoom_step);
             break;
 
         case GLUT_KEY_F2:
-            view_range += view_range / zoom_step;
+            view_range += std::abs(view_range / zoom_step);
+            break;
+
+        case GLUT_KEY_F3: // Print view information to the console.
+            std::cout << "VIEW RANGE: " << view_range << std::endl;
+            std::cout << "VIEW X: " << view_x << std::endl;
+            std::cout << "VIEW Y: " << view_y << std::endl;
+            return;
+
+        case GLUT_KEY_F4: // Reset view.
+            view_range = mandelbrot_range;
+            view_x = 0.0f;
+            view_y = 0.0f;
             break;
 
         default: return;
@@ -134,7 +158,7 @@ int main(int argc, char **argv)
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutCreateWindow("Mandelbrot Set");
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     glutDisplayFunc(display);
     glutSpecialFunc(keyboard);
