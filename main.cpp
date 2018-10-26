@@ -48,7 +48,7 @@ void display()
 
     glPointSize(1.5f);
     glBegin(GL_POINTS);
-    // Iterate through divided observable area (X and Y coordinates applied:
+    // Iterate through divided observable area (X and Y coordinates applied):
     for (float i = -view_range + view_x; i <= view_range + view_x; i += step)
     {
         for (float j = -view_range + view_y; j <= view_range + view_y; j += step)
